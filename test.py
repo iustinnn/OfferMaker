@@ -44,6 +44,7 @@ def save_to_docx(text, filename):
 model_name = "iustinnn/test-model"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.bfloat16, device_map="auto")
+#model.to("cuda")
 
 
 # Define instruction
@@ -54,6 +55,8 @@ input_text = input("Please enter the input text: ")
 combined_input = f"Instruction: {instruction} Input: {input_text}"
 max_length = 2048
 
+# Tokenize the combined input
+#inputs = tokenizer(combined_input, return_tensors="pt", padding='max_length', truncation=True, max_length=max_length).to("cuda")
 inputs = tokenizer(combined_input, return_tensors="pt", padding='max_length', truncation=True, max_length=max_length)
 
 if tokenizer.pad_token_id is None:
@@ -73,6 +76,6 @@ print(initial_output_text)
 
 save_to_docx(initial_output_text, "initial_output.docx")
 
-# Verifica structure
+
 feedback, missing_sections = check_structure_and_provide_feedback(initial_output_text)
 print(feedback)
